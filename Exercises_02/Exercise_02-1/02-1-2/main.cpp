@@ -11,7 +11,7 @@ using namespace std;
 const int M = 10000;    // number of throws
 const int N = 100;      // number of blocks
 
-const string ResultsDirectory = "/home/edoiannu/Documenti/Lab_simulazione_numerica/Exercises_02/results/";
+const string ResultsDirectory = "/home/edoiannu/Documenti/Lab_simulazione_numerica/LSN_Exercises_Iannucci/Exercises_02/results/";
 
 double f (double x) { return 1.-sqrt(1.-x); };
 
@@ -42,7 +42,10 @@ int main(){
     ofstream WriteResults;
     WriteResults.open(ResultsDirectory+"02-1-2.out");
 
-    for (int i=1; i<N; i++){
+    WriteResults << "# STEPS " << M << endl;
+    WriteResults << "# BLOCKS " << N << endl;
+
+    for (int i=0; i<N; i++){
 
         for(int j=0; j<=i; j++){
 
