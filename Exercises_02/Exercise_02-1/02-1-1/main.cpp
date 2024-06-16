@@ -34,7 +34,7 @@ int main(){
     ofstream WriteResults;
     WriteResults.open(ResultsDirectory+"02-1-1.out");
 
-    for (int i=1; i<N; i++){
+    for (int i=0; i<N; i++){
 
         for(int j=0; j<=i; j++){
 
