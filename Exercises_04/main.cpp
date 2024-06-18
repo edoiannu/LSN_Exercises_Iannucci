@@ -32,6 +32,7 @@ int main(int argc, char *argv[]){
     }
     SYS.averages(i+1, outputd);
     SYS.block_reset(i+1, outputd);
+    cout << i << endl;
   }
   SYS.finalize(outputd);
 
