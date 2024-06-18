@@ -4,27 +4,26 @@
 #include <cmath>
 #include <iomanip>
 #include <vector>
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/random.h"
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/mylib.h"
+#include "../../libraries/random.h"
+#include "../../libraries/mylib.h"
 
 using namespace std;
 
-const string ResultsDirectory = "/home/edoiannu/Documenti/Lab_simulazione_numerica/Exercises_01/results/";
-
-const double l = 0.8;   // neddle length
-const double d = 1.;    // distance between plane lines
-const int M = 100000;    // number of throws
-const int N = 100;      // number of blocks
+const double l = 1.;   // neddle length
+const double d = 2.;    // distance between plane lines
+const int M = 100000000;    // number of total throws
+const int N = 100;      // number of block
 const int L = M / N;    // number of throws in each block
 
 int main(){
 
     Random rnd;
+    vector<double> pi(N);
     vector<double> ave(N);
     vector<double> ave2(N);
 
     double ycm, x, y;
-    double tan, y1, y2;
+    double theta;
     int Nhit;
 
     for (int i=0; i<N; i++){
@@ -33,37 +32,40 @@ int main(){
 
         for (int j=0; j<L; j++){
 
-            ycm = rnd.Rannyu(-0.3,20.7);
+            ycm = rnd.Rannyu(-d*0.5,d*0.5);
 
             do{
                 x = rnd.Rannyu(-1,1);
                 y = rnd.Rannyu(-1,1);
-            }while(x*x+y*y < 1);
+            }while(x*x+y*y > 1);
 
-            tan = atan(x/y);
+            theta = atan(x/y);
 
-            y1 = ycm + (l/2) * sin(tan);
-            y2 = ycm - (l/2) * sin(tan);
-
-            if (floor(y1) != floor(y2)) { Nhit++; }
-
-            // if (i==0) { cout << y1 << " " << y2 << " " << Nhit << endl; }
+            if ( abs(0.5*l*sin(theta))-abs(ycm)>0 ) {
+               Nhit += 1;
+            }
         }
 
-        ave[i] = (2*l*L) / (Nhit*d);
-        ave2[i] = ave[i] * ave[i];
+        pi[i] = 2* l/d * L/Nhit;
+        cout << pi[i] << endl;
     }
+
+    for (int i=0; i<N; i++)
+        ave2[i] = pi[i] * pi[i];
 
     vector<double> prog_sum(N);
     vector<double> prog_sum2(N);
 
     ofstream WriteResults;
-    WriteResults.open(ResultsDirectory+"buffon.out");
+    WriteResults.open("buffon.out");
 
-    for (int i=1; i<N; i++){
+    WriteResults << "# STEPS " << M << endl;
+    WriteResults << "# BLOCKS " << N << endl;
+
+    for (int i=0; i<N; i++){
 
         for(int j=0; j<=i; j++){
-            prog_sum[i] += ave[j];
+            prog_sum[i] += pi[j];
             prog_sum2[i] += ave2[j];
         }
 
