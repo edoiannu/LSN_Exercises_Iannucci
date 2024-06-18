@@ -4,8 +4,8 @@
 #include <cmath>
 #include <iomanip>
 #include <vector>
-#include "../../../libraries/random.h"
-#include "../../../libraries/mylib.h"
+#include "../../libraries/random.h"
+#include "../../libraries/mylib.h"
 
 using namespace std;
 
