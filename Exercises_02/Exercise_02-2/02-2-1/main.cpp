@@ -15,7 +15,7 @@ const int N = 100;          // number of blocks
 const int L = M / N;        // number of RWs within one block
 const int a = 1;            // lattice spacing
 
-const string ResultsDirectory = "../../../Exercises_02/results/";
+const string ResultsDirectory = "../../results/";
 
 // facciamo una classe "random walk"
 // membri privati: le coordinate spaziali

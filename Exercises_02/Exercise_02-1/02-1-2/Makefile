@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -Wall -O3 --std=c++17
-CPATH = /home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/
+CPATH = ../../../libraries/
 
 main.exe : main.o random.o mylib.o
 	$(CC) random.o mylib.o main.o -o main.exe

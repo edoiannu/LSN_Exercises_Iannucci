@@ -26,7 +26,7 @@ vector<double> MeanBlock (vector<double> v, int M, int N){
             sum = 0;
 
             for(int j=i*L; j<(i+1)*L; j++){  // for loop that iterates over the throws of the (j+1)-th block
-                cout << j << endl;    
+                // cout << j << endl;    
                 sum += v[j];
             }
 

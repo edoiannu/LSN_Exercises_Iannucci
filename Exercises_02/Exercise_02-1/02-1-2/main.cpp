@@ -3,15 +3,15 @@
 #include <string>
 #include <cmath>
 #include <iomanip>
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/random.h"
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/mylib.h"
+#include "../../../libraries/random.h"
+#include "../../../libraries/mylib.h"
 
 using namespace std;
 
-const int M = 10000;    // number of throws
+const int M = 1000000;    // number of throws
 const int N = 100;      // number of blocks
 
-const string ResultsDirectory = "/home/edoiannu/Documenti/Lab_simulazione_numerica/LSN_Exercises_Iannucci/Exercises_02/results/";
+const string ResultsDirectory = "../../results/";
 
 double f (double x) { return 1.-sqrt(1.-x); };
 
