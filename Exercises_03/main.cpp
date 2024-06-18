@@ -4,11 +4,11 @@
 #include <cmath>
 #include <iomanip>
 #include <vector>
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/random.h"
+#include "../libraries/random.h"
 
 using namespace std;
 
-const int M = 10000;        // number of asset prices
+const int M = 100000;        // number of asset prices
 const int N = 100;          // number of blocks
 const int L = M / N;        // number of asset prices within a block
 
@@ -19,7 +19,7 @@ const double S0 = 100;      // asset price at t = 0
 const double T = 1.;        // delivery time
 const double dt = T/100;
 
-const string path = "/home/edoiannu/Documenti/Lab_simulazione_numerica/Exercises_03/results/";
+const string path = "results/";
 
 double var (double A, double A2, int n){
    return sqrt((A2-A*A)/n);}
@@ -83,6 +83,9 @@ int main(){
     }
 
     WriteResults.open(path+options[b]+"_"+sample[a]+".out");
+
+    WriteResults << "# STEPS " << M << endl;
+    WriteResults << "# BLOCKS " << N << endl;
 
     for (int i=1; i<N; i++){
 
