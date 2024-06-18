@@ -3,9 +3,9 @@
 #include <string>
 #include <cmath>
 #include <iomanip>
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/random.h"
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/mylib.h"
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/randomwalk.h"
+#include "../../../libraries/random.h"
+#include "../../../libraries/mylib.h"
+#include "../../../libraries/randomwalk.h"
 
 using namespace std;
 
@@ -15,7 +15,7 @@ const int N = 100;          // number of blocks
 const int L = M / N;        // number of RWs within one block
 const int a = 1;            // lattice spacing
 
-const string ResultsDirectory = "/home/edoiannu/Documenti/Lab_simulazione_numerica/LSN_Exercise_Iannucci/Exercises_02/results/";
+const string ResultsDirectory = "../../../Exercises_02/results/";
 
 // facciamo una classe "random walk"
 // membri privati: le coordinate spaziali

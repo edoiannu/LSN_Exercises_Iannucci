@@ -4,15 +4,15 @@
 #include <cmath>
 #include <iomanip>
 #include <vector>
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/random.h"
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/mylib.h"
+#include "../../../libraries/random.h"
+#include "../../../libraries/mylib.h"
 
 using namespace std;
 
 const int M = 1000000;   // number of total throws
 const int N = 100;       // number of blocks
 
-const string ResultsDirectory = "/home/edoiannu/Documenti/Lab_simulazione_numerica/Exercises_01/Exercise_01-1/01-1-1/";
+// const string ResultsDirectory = "../../Exercises_01/Exercise_01-1/01-1-1/";
 
 int main(){
 
@@ -34,7 +34,7 @@ int main(){
     vector<double> prog_sum2(N);
 
     ofstream WriteResults;
-    WriteResults.open(ResultsDirectory+"01-1-1.out");
+    WriteResults.open("01-1-1.out");
 
     WriteResults << "# STEPS " << M << endl;
     WriteResults << "# BLOCKS " << N << endl;

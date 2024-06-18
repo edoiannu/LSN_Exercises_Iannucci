@@ -4,12 +4,12 @@
 #include <cmath>
 #include <iomanip>
 #include <vector>
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/random.h"
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/mylib.h"
+#include "../../../libraries/random.h"
+#include "../../../libraries/mylib.h"
 
 using namespace std;
 
-const string ResultsDirectory = "/home/edoiannu/Documenti/Lab_simulazione_numerica/Exercises_01/results/";
+const string ResultsDirectory = "/results/";
 
 const int M = 10000; // number of total throws
 
