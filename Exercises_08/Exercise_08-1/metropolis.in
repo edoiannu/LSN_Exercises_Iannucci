@@ -1,9 +1,9 @@
 DIMENSION           1
 STARTING_POSITION   1
 DISTRIBUTION        0
-SA                  0   1.25903   -0.258984   100
-STEPS               100000
-BLOCKS              1000
+SA                  0   0.816845   0.582923   100
+STEPS               1000000
+BLOCKS              200
 
 ENDINPUT
 

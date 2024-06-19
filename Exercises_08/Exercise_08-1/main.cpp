@@ -5,8 +5,6 @@ const string ResultsDirectory = "results/";
 
 using namespace std;
 
-
-
 double wavef(vec coord, vec param){
 
     double mu = param[0];

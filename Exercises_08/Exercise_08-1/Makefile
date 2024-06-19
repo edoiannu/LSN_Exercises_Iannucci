@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -O3 --std=c++11
 AFLAGS = -larmadillo
-LPATH = /home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/
+LPATH = ../../libraries/
 MPATH = ../
 
 main.exe : metropolis.o main.o random.o mylib.o
