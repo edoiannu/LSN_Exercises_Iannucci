@@ -55,7 +55,7 @@ private:
   int _index_magnet, _index_cv, _index_chi;                 // Indices for accessing magnetization, heat capacity, and susceptibility
   int _n_bins;           // Number of bins for radial distribution function
   double _bin_size;      // Size of bins for radial distribution function
-  double _vtail, _ptail; // Tail corrections for energy and pressure
+  double _vtail = 0.0, _ptail = 0.0; // Tail corrections for energy and pressure
   vec _block_av;         // Block averages of properties
   vec _global_av;        // Global averages of properties
   vec _global_av2;       // Squared global averages of properties

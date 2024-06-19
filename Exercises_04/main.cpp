@@ -22,8 +22,10 @@ int main(int argc, char *argv[]){
   SYS.block_reset(0, outputd);
 
   for(int i=0; i < SYS.get_nbl(); i++){ //loop over blocks
+    // cout << "ok" << endl;
     for(int j=0; j < SYS.get_nsteps(); j++){ //loop over steps in a block
       SYS.step();
+      // cout << j << endl;
       SYS.measure();
       if(j%10 == 0){
 //        SYS.write_XYZ(nconf); //Write actual configuration in XYZ format //Commented to avoid "filesystem full"! 

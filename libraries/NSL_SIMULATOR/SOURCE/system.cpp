@@ -214,7 +214,7 @@ void System :: initialize(string inputf, string outputd){ // Initialize the Syst
 void System :: initialize_velocities(string inputd){
   if(_restart and _sim_type==0){  // Se la variabile _restart è vera (cioè non zero) e il tipo di simulazione _sim_type è uguale a zero, allora la condizione è vera
     ifstream cinf;
-    cinf.open(inputd+"CONFIG/term_vel.out");
+    cinf.open(inputd+"CONFIG/velocities.out");
     if(cinf.is_open()){
       double vx, vy, vz;
       for(int i=0; i<_npart; i++){
@@ -295,7 +295,7 @@ void System :: initialize_properties(string outputd){ // Initialize data members
         _index_penergy = index_property;
         _measure_penergy = true;
         index_property++;
-        _vtail = ((8 * M_PI * _rho) / 9) * (1/pow(_r_cut,9) - 3*(1/pow(_r_cut,3)));
+        // _vtail = ((8 * M_PI * _rho) / 9) * (1/pow(_r_cut,9) - 3*(1/pow(_r_cut,3)));
       } else if( property == "KINETIC_ENERGY" ){
         ofstream coutk(outputd+"kinetic_energy.dat");
         coutk << "#     BLOCK:   ACTUAL_KE:    KE_AVE:      ERROR:" << endl;
@@ -328,7 +328,7 @@ void System :: initialize_properties(string outputd){ // Initialize data members
         _measure_pressure = true;
         _index_pressure = index_property;
         index_property++;
-        _ptail = (16 * M_PI * _rho) * ((2/3)/pow(_r_cut,9) - 1/pow(_r_cut,3));
+        // _ptail = (16 * M_PI * _rho) * ((2/3)/pow(_r_cut,9) - 1/pow(_r_cut,3));
       } else if( property == "GOFR" ){
         ofstream coutgr(outputd+"gofr.dat");
         coutgr << "# DISTANCE:     AVE_GOFR:        ERROR:" << endl;
@@ -473,7 +473,7 @@ void System :: read_configuration(string outputd){
       cinf.close();
     }
     else {
-      cinf.open(outputd+"CONFIG/term_config.xyz");
+      cinf.open(outputd+"CONFIG/config.xyz");
     }
 
     if(cinf.is_open()){
@@ -565,6 +565,7 @@ void System :: measure(){ // Measure properties
   double cv_temp=0.0;
   double chi_temp=0.0;
   double virial=0.0;
+  // cout << "ok" << endl;
   if (_measure_penergy or _measure_pressure or _measure_gofr) {
     for (int i=0; i<_npart-1; i++){
       // cout << i << endl;
@@ -575,24 +576,23 @@ void System :: measure(){ // Measure properties
         dr = sqrt( dot(distance,distance) );
         // cout << dr << endl;
         // GOFR ... TO BE FIXED IN EXERCISE 7
+        if (_measure_gofr){
         for (int k=_index_gofr; k<_index_gofr+_n_bins; k++){
-          // cout << "BIN " << k+1 << " = (" << (k-_index_gofr)*_bin_size << ", " << (1+k-_index_gofr)*_bin_size << ")"<< endl;
           if (dr > (k-_index_gofr)*_bin_size and dr < (1+k-_index_gofr)*_bin_size) {
-            // cout << "BIN " << k+1 << " = (" << (k-_index_gofr)*_bin_size << ", " << (1+k-_index_gofr)*_bin_size << ")"<< endl;
             _measurement(k) += 2;
-            // cout << "Sto riempendo il bin " << k << " che ora è riempito a " << _measurement(k) << endl;}
           }
-        //
+        }
+        }
         if(dr < _r_cut){
           if(_measure_penergy)  penergy_temp += 1.0/pow(dr,12) - 1.0/pow(dr,6); // POTENTIAL ENERGY
           if(_measure_pressure) pressure_temp += 1.0/pow(dr,12) - 0.5/pow(dr,6);
-        }
         }
       }
     }
     /*for (int i=_index_gofr; i<_index_gofr+_n_bins; i++){
       _measurement(i) /= (_rho * _npart * (4./3.) * M_PI * (pow(((i+1-_index_gofr)*_bin_size),3) - pow(((i-_index_gofr)*_bin_size),3)));
     }*/
+  // cout << "ok" << endl;
   }
   // GOFR //////////////////////////////////////////////////////////
   if (_measure_gofr){
