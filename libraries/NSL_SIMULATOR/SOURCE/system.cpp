@@ -223,7 +223,7 @@ void System :: initialize_velocities(string inputd){
         _particle(i).setvelocity(1,vy);
         _particle(i).setvelocity(2,vz);
       }
-    } else cerr << "PROBLEM: Unable to open INPUT file term_vel.out"<< endl;
+    } else cerr << "PROBLEM: Unable to open INPUT file velocities.out"<< endl;
     cinf.close();
   } else {
     vec vx(_npart), vy(_npart), vz(_npart);
@@ -295,7 +295,7 @@ void System :: initialize_properties(string outputd){ // Initialize data members
         _index_penergy = index_property;
         _measure_penergy = true;
         index_property++;
-        // _vtail = ((8 * M_PI * _rho) / 9) * (1/pow(_r_cut,9) - 3*(1/pow(_r_cut,3)));
+        _vtail = ((8 * M_PI * _rho) / 9) * (1/pow(_r_cut,9) - 3*(1/pow(_r_cut,3)));
       } else if( property == "KINETIC_ENERGY" ){
         ofstream coutk(outputd+"kinetic_energy.dat");
         coutk << "#     BLOCK:   ACTUAL_KE:    KE_AVE:      ERROR:" << endl;
@@ -328,7 +328,7 @@ void System :: initialize_properties(string outputd){ // Initialize data members
         _measure_pressure = true;
         _index_pressure = index_property;
         index_property++;
-        // _ptail = (16 * M_PI * _rho) * ((2/3)/pow(_r_cut,9) - 1/pow(_r_cut,3));
+        _ptail = (16 * M_PI * _rho) * ((2/3)/pow(_r_cut,9) - 1/pow(_r_cut,3));
       } else if( property == "GOFR" ){
         ofstream coutgr(outputd+"gofr.dat");
         coutgr << "# DISTANCE:     AVE_GOFR:        ERROR:" << endl;
@@ -494,7 +494,7 @@ void System :: read_configuration(string outputd){
       _particle(i).setposition(2, this->pbc(_side(2)*z, 2));
       _particle(i).acceptmove(); // _x_old = _x_new
     }
-    } else cerr << "PROBLEM: Unable to open INPUT file term_config.xyz"<< endl;
+    } else cerr << "PROBLEM: Unable to open INPUT file config.xyz"<< endl;
     cinf.close();
   }
   else{
