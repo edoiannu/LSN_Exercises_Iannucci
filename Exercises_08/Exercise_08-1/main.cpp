@@ -47,6 +47,9 @@ int main(){
     const int N = metro.get_nblocks();
     const int L = metro.get_blksteps();
 
+    ofstream print_pos;
+    print_pos.open("results/sample_positions.out");
+
     vec ave(N);
 
     double appo;
@@ -59,6 +62,7 @@ int main(){
 
             metro.step(wavef_prob);
             appo += energy(metro.get_vcoord(), metro.get_vparam());
+            print_pos << metro.get_coord(0) << endl;
         }
 
         ave[i] = appo / L;
