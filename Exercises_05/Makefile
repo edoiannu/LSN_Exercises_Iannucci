@@ -16,4 +16,6 @@ mylib.o : $(LPATH)mylib.cpp $(LPATH)mylib.h
 clean :
 	rm *.o main.exe
 remove :
-	rm results/*.*
+	rm results/1s* results/2p*
+remove_steps :
+	rm results/steps*

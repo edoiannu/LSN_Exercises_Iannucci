@@ -71,7 +71,7 @@ int main(){
         ave[i] = appo / L;
     }
 
-    metro.print_results(ave, ResultsDirectory+resultsf);
+    // metro.print_results(ave, ResultsDirectory+resultsf);
     print_steps.close();
 
     return 0;
