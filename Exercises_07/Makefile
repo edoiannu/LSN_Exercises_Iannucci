@@ -1,8 +1,8 @@
 CC = g++
 CFLAGS = -O3 --std=c++11
 AFLAGS = -larmadillo
-CPATH = /home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/NSL_SIMULATOR/SOURCE/
-RPATH = /home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/
+CPATH = ../libraries/NSL_SIMULATOR/SOURCE/
+RPATH = ../libraries/
 
 all: main.exe
 main.exe : system.o main.o particle.o random.o

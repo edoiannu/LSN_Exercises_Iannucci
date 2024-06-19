@@ -32,7 +32,6 @@ int main (int argc, char *argv[]){
             nconf++;
         }
         // SYS.print_istant(outputd);
-        cout << i << endl;
     }
 
     SYS.averages(i+1, outputd);

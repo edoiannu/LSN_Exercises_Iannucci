@@ -206,7 +206,7 @@ void System :: initialize(string inputf, string outputd){ // Initialize the Syst
   input.close();
   this->read_configuration(outputd);
   this->initialize_velocities(outputd);
-  coutf << "System initialized!" << endl;
+  coutf << "System initialized!" << endl; 
   coutf.close();
   return;
 }

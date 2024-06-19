@@ -1,0 +1,13 @@
+DIMENSION           1
+STARTING_POSITION   1
+DISTRIBUTION        0
+SA                  1   1.0   0.5   300
+STEPS               100000
+BLOCKS              1000
+
+ENDINPUT
+
+0 -> uniform distribution
+1 -> gaussian distribution
+
+SA                  <true/false> <mu> <sigma> <number_of_steps>
