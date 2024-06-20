@@ -166,6 +166,8 @@ double distance(double x1, double y1, double x2, double y2){
 
 double loss_function(double x[], double y[], int * v, int i){
 
+    // cout << "INDIVIDUO " << i << endl;
+
     double L = 0.;
     double appo = 0.;
 
