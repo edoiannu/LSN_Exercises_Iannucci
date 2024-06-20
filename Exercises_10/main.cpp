@@ -40,6 +40,17 @@ int main(int argc, char* argv[]){
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+    //////////// PRINT PARAMS //////////////////////////////////////
+
+    ofstream print_par;
+    print_par.open("params.out");
+
+    print_par << "N_IND " << N_IND << endl;
+    print_par << "N_IND " << N_GEN << endl;
+    print_par << "N_IND " << N_MIGR << endl;
+
+    print_par.close();
+
     //////////// SETTING DIFFERENT PRIMES FOR EACH NODE ////////////
 
     ifstream read_primes;
@@ -79,9 +90,6 @@ int main(int argc, char* argv[]){
     }
 
     for (int i=0; i<4; i++) { read_seeds >> seeds[i]; }
-
-    read_seeds.close();
-    read_primes.close();
 
     Random _rnd;
     _rnd.SetRandom(seeds, p1, p2);
@@ -129,6 +137,7 @@ int main(int argc, char* argv[]){
         }
         MPI_Barrier(MPI_COMM_WORLD);
         check(gene);
+        if (rank==0) cout << "Starting population generation: cycle " << i+1 << " completed" << endl;
     }
 
     int j1, j2;
@@ -137,8 +146,13 @@ int main(int argc, char* argv[]){
     int * son2 = new int[N_PROV];
 
     double * fit = new double[N_GEN];
+    double * Lmean = new double[N_GEN];
+    int * best_path = new int[N_PROV]; // array containing the order of the provinces of the best path
+    double * best_fits = new double[N_GEN]; // array containing the best fit for each generation
 
     for (int i=0; i<N_GEN; i++){
+
+        if (rank==0) cout << "Generation " << i+1 << endl;
 
         int k = SURV_CUT;
 
@@ -214,7 +228,7 @@ int main(int argc, char* argv[]){
         MPI_Barrier(MPI_COMM_WORLD);
         check(gene);
 
-        fit[i] = fitness(longs, lats, gene);
+        // fit[i] = fitness(longs, lats, gene);
 
         /*if(rank==7 and i==99){
             for (int l=0; l<N_IND; l++){
@@ -224,21 +238,26 @@ int main(int argc, char* argv[]){
             }
         }*/
 
-        int ind1, ind2;
-
-        for (int l=0; l<4; l++){
-            if (l==3) seeds[l] = i+1;
-            else seeds[l] = 0;
-        }
-
-        p1 = 2892;
-        p2 = 2587;
-
-        _rnd.SetRandom(seeds,p1,p2);
+        // le righe dove cambio i semi prima erano qua
 
         // if (rank==0) cout << _rnd.Rannyu() << endl;
 
         if ( (i+1) % 10 == 0 ){
+
+            // cout << i << endl;
+
+            int ind1, ind2;
+
+            for (int l=0; l<4; l++){
+                if (l==3) seeds[l] = i+1;
+                else seeds[l] = 0;
+            }
+
+            p1 = 2892;
+            p2 = 2587;
+
+            _rnd.SetRandom(seeds,p1,p2);
+
             for (int j=0; j<(size/2)*SURV_CUT; j++){
 
                 // sorteggiamo i processi coinvolti nello scambio
@@ -327,52 +346,223 @@ int main(int argc, char* argv[]){
                         cout << endl << "loss = " << loss_function(longs, lats, gene, l) << endl;
                     }
                 }*/
-            }    
+            }
+
+            // RISETTIAMO I SEMI DIVERSI PER CIASCUN NODO
+
+            if (rank==0){
+                for (int l=0; l<4; l++){
+                    if (l==0) seeds[l] = i+1;
+                    else seeds[l] = 0;
+                }
+            }
+            else if (rank==1){
+                for (int l=0; l<4; l++){
+                    if (l==1) seeds[l] = i+1;
+                    else seeds[l] = 0;
+                }
+            }
+            else if (rank==2){
+                for (int l=0; l<4; l++){
+                    if (l==0) seeds[l] = i+1;
+                    else if (l==1) seeds[l] = i+1;
+                    else seeds[l] = 0;
+                }
+            }
+            else if (rank==3){
+                for (int l=0; l<4; l++){
+                    if (l==2) seeds[l] = i+1;
+                    else seeds[l] = 0;
+                }
+            }
+            else if (rank==4){
+                for (int l=0; l<4; l++){
+                    if (l==2) seeds[l] = i+1;
+                    else seeds[l] = 0;
+                }
+            }
+            else if (rank==5){
+                for (int l=0; l<4; l++){
+                    if (l==1) seeds[l] = i+1;
+                    else if (l==2) seeds[l] = i+1;
+                    else seeds[l] = 0;
+                }
+            }
+            else if (rank==6){
+                for (int l=0; l<4; l++){
+                    if (l!=3) seeds[l] = i+1;
+                    else seeds[l] = 0;
+                }
+            }
+            else if (rank==7){
+                for (int l=0; l<4; l++){
+                    if (l==1) seeds[l] = i+1;
+                    else if (l==3) seeds[l] = i+1;
+                    else seeds[l] = 0;
+                }
+            }
+
+            _rnd.SetRandom(seeds,p1,p2);
         }
 
         fit[i] = fitness(longs, lats, gene);
 
+        double appo = 0.0;
+
+        for (int j=0; j<(N_IND)/2; j++){
+            appo += loss_function(longs, lats, gene, j);
+        }
+
+        Lmean[i] = appo / ((N_IND)/2);
+
         check(gene);
+
+        MPI_Barrier(MPI_COMM_WORLD);
+
+        // lavoro con tempo solo nel nodo 0
+        
+        double * temp = new double[size];
+        // double temp_ = 0.;
+
+        // lo 0-esimo elemento lo carico già nel nodo 0
+        if (rank == 0){
+            temp[0] = fit[i];
+        }
+
+        appo = 0.;
+        
+        // gli elementi da 1 a 7 li ricevo dagli altri nodi così
+        for (int j=1; j<size; j++){
+            if (j == rank){
+                appo = fit[i];
+                // cout << "Il rank " << j << "invia: " << appo << endl;
+                MPI_Send(&appo, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+            }
+            else if (rank == 0){
+                MPI_Recv(&temp[j],1,MPI_DOUBLE,j,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+                // cout << "Il processo 0 ha ricevuto " << temp[j] << endl;
+            }
+            /*else if (rank == 0){
+                MPI_Recv(&temp[j],1,MPI_DOUBLE,1,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            }*/
+            MPI_Barrier(MPI_COMM_WORLD);
+        }
+
+        /*if(rank==0){
+        for (int j=0; j<size; j++)
+            cout << j << " " << temp[j] << endl;
+        }*/
+
+        // if (i==N_GEN-1){
+        
+        int best = 0;
+
+        // qui sotto capisco quale elemento di temp è il migliore
+        if (rank==0){
+
+            best = 0;
+            double best_el = temp[best];
+
+            for (int j=1; j<size; j++){
+
+                // cout << "confronto " << best_el << " con " << temp[j] << endl;
+
+                if (temp[j] < best_el) {
+                    best_el = temp[j];
+                    best = j;
+                    // cout << "il nuovo best è " << temp[best] << endl;
+                }
+            }
+
+        // cout << "best "<< best << endl; 
+        }    
+
+        for (int j=1; j<size; j++){
+            if (rank == 0){
+                MPI_Send(&best, 1, MPI_INT, j, 0, MPI_COMM_WORLD);
+            }
+            else if (rank == j){
+                MPI_Recv(&best,1,MPI_DOUBLE,0,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+                // cout << "Il processo 0 ha ricevuto " << temp[j] << endl;
+            }
+            /*else if (rank == 0){
+                MPI_Recv(&temp[j],1,MPI_DOUBLE,1,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+            }*/
+            MPI_Barrier(MPI_COMM_WORLD);
+        }
+
+        // cout << best << endl;          
+
+        // MPI_Barrier(MPI_COMM_WORLD);
+
+        appo = 0.;
+        
+        if (best != 0){
+            if (rank == best){
+                appo = fit[i];
+                // cout << "Il processo " << rank << " sta inviando "  << appo << " al processo 0" << endl;
+                MPI_Send(&appo, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+                // best_fits[i] = fit[i];
+            }
+            else if (rank == 0){
+                MPI_Recv(&best_fits[i],1,MPI_DOUBLE,best,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+                // cout << "Il processo 0 ha ricevuto " << best_fits[i] << endl;
+            }
+        }
+        else{
+            if (rank == 0) { best_fits[i] = fit[i]; }
+        }
+
+        MPI_Barrier(MPI_COMM_WORLD);
+
+        if ( i == N_GEN-1 ){
+            if (best != 0){
+            if (rank == best){
+                appo = fit[i];
+                // cout << "Il processo " << rank << " sta inviando "  << appo << " al processo 0" << endl;
+                MPI_Send(&gene[0], N_PROV, MPI_INT, 0, 0, MPI_COMM_WORLD);
+                // best_fits[i] = fit[i];
+            }
+            else if (rank == 0){
+                MPI_Recv(&best_path[0],N_PROV,MPI_INT,best,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+                // cout << "Il processo 0 ha ricevuto " << best_fits[i] << endl;
+            }
+            }
+            else{
+                if (rank == 0) {
+                    for (int j=0; j<N_PROV; j++){
+                        best_path[j] = gene[j];
+                    }
+                }
+            }
+        }
+
+        /*if (rank == best and i == N_GEN-1){
+            for (int j=0; j<N_PROV; j++){
+                best_path[j] = gene[j];
+            }
+        }*/
+        
+        delete[] temp;
+        // }
     }
-
-    /////// MEAN BLOCK ///////
-
-    vector<int> prog_sum(N_GEN,0);
-    vector<int> prog_sum2(N_GEN,0);
-    vector<int> fit2(N_GEN,0);
-
-    for (int i=0; i<N_GEN; i++)
-        fit2[i] = fit[i] * fit[i];
-
+    /////// PRINT RESULTS ///////
+    
     ofstream print_results[size];
+    ofstream print_bestfits;
+    ofstream print_bestpath;
+
+    print_bestfits.open("results/Lbest.out");
+    print_bestpath.open("results/best_path.out");
 
     for (int i=0; i<size; i++){
         if (i==rank){
-            print_results[i].open("results/Lmean_proc"+to_string(i)+".out");
-            print_results[i] << "BLK #" << setw(15) << "BLK_AVE" << setw(15) << "CURRENT_AVE" << setw(15) << "ERROR" << endl;
+            print_results[i].open("results/L_proc"+to_string(i)+".out");
+            print_results[i] << "GEN #" << setw(15) << "BEST_L" << setw(15) << "L_MEAN"  << endl;
 
             for (int j=0; j<N_GEN; j++){
 
-                if(i==0 and j==0){
-                    cout << prog_sum[j] << " " << prog_sum2[j] << endl;
-                }
-
-                for(int k=0; k<=j; k++){
-                    prog_sum[j] += fit[k];
-                    prog_sum2[j] += fit2[k];
-                    if(i==0 and j==0){
-                        cout << fit[k] << " " << fit2[k] << endl;
-                    }
-                }
-
-                if(i==0 and j==0){
-                    cout << prog_sum[j] << " " << prog_sum2[j] << endl;
-                }
-
-            prog_sum[j] /= (j+1);
-            prog_sum2[j] /= (j+1);
-
-            print_results[i] << j+1 << setw(15) << fit[j] << setw(15) << prog_sum[j] << setw(15) << var(prog_sum[j], prog_sum2[j],j) << endl;
+                print_results[i] << j+1 << setw(15) << fit[j] << setw(15) << Lmean[j] << endl;
             }
 
         }
@@ -380,13 +570,28 @@ int main(int argc, char* argv[]){
         print_results[i].close();
     }
 
+    if (rank==0){
+        for (int i=0; i<N_GEN; i++) print_bestfits << best_fits[i] << endl;
+        for (int i=0; i<N_PROV; i++) print_bestpath << longs[best_path[i]-1] << setw(10) << lats[best_path[i]-1] << endl;
+    }
+    
+
     MPI_Finalize();
+
+    read_seeds.close();
+    read_primes.close();
+    print_bestfits.close();
+    print_bestpath.close();
 
     delete[] gene;
     delete[] mutated_gene;
     delete[] sons;
     delete[] son1;
     delete[] son2;
+    delete[] Lmean;
+    delete[] best_fits;
+    delete[] best_path;
 
     return 0;
+
 }

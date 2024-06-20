@@ -1,5 +1,5 @@
 CFLAGS = -O3 --std=c++11
-LPATH = /home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/
+LPATH = ../libraries/
 
 main.exe : random.o PT_fun.o mylib.o main.cpp
 	mpicxx -o main.exe main.cpp random.o PT_fun.o mylib.o
@@ -18,3 +18,6 @@ mylib.o : $(LPATH)mylib.cpp $(LPATH)mylib.h
 
 clean:
 	rm *.exe *.o
+
+remove :
+	rm results/*.*
