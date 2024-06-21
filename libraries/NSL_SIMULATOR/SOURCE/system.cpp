@@ -96,11 +96,16 @@ void System :: move(int i){ // Propose a MC move for particle i
 bool System :: metro(int i){ // Metropolis algorithm
   bool decision = false;
   double delta_E, acceptance;
-  if(_sim_type == 1) delta_E = this->Boltzmann(i,true) - this->Boltzmann(i,false);
+  if(_sim_type == 1) {
+    delta_E = this->Boltzmann(i,true) - this->Boltzmann(i,false);
+  }
   else delta_E = 2.0 * _particle(i).getspin() * 
                  ( _J * (_particle(this->pbc(i-1)).getspin() + _particle(this->pbc(i+1)).getspin() ) + _H );
   acceptance = exp(-_beta*delta_E);
-  if(_rnd.Rannyu() < acceptance ) decision = true; //Metropolis acceptance step
+  // cout << delta_E << endl;
+  if(_rnd.Rannyu() < acceptance ) {
+    decision = true;
+  } //Metropolis acceptance step
   return decision;
 }
 
@@ -108,17 +113,22 @@ double System :: Boltzmann(int i, bool xnew){
   double energy_i=0.0;
   double dx, dy, dz, dr;
   for (int j=0; j<_npart; j++){
+    cout << "questo stampa la pbc " << i << endl;
     if(j != i){
       dx = this->pbc(_particle(i).getposition(0,xnew) - _particle(j).getposition(0,1), 0);
       dy = this->pbc(_particle(i).getposition(1,xnew) - _particle(j).getposition(1,1), 1);
       dz = this->pbc(_particle(i).getposition(2,xnew) - _particle(j).getposition(2,1), 2);
       dr = dx*dx + dy*dy + dz*dz;
       dr = sqrt(dr);
+      cout << _particle(i).getposition(0,xnew) << endl;
+      cout << _particle(i).getposition(1,xnew) << endl;
+      cout << _particle(i).getposition(2,xnew) << endl;
       if(dr < _r_cut){
         energy_i += 1.0/pow(dr,12) - 1.0/pow(dr,6);
       }
     }
   }
+  // cout << energy_i << endl;
   return 4.0 * energy_i;
 }
 
@@ -794,7 +804,8 @@ void System :: averages(int blk, string outputd){
   double fraction;
   coutf.open(outputd+"acceptance.dat",ios::app);
   if(_nattempts > 0) fraction = double(_naccepted)/double(_nattempts);
-  else fraction = 0.0; 
+  else fraction = 0.0;
+  // cout << _naccepted << " " << _nattempts << endl;
   coutf << setw(12) << blk << setw(12) << fraction << endl;
   coutf.close();
   // cout << fraction << endl;

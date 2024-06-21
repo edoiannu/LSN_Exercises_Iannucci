@@ -3,7 +3,7 @@ TEMPERATURE= 1.2
 NPART= 108
 SIDE=      12.9266     12.9266     12.9266
 R_CUT= 5
-DELTA= 4
+DELTA= 5
 NBLOCKS= 100
 NSTEPS= 1000
 Reading input completed!

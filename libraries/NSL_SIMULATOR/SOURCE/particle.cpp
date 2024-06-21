@@ -50,8 +50,11 @@ void Particle :: setspin(int spin){
 }
 
 double Particle :: getposition(int dim, bool xnew){
-   if(xnew) return _x(dim);
-   else return _xold(dim);
+   if(xnew) { // cout << _x(dim) << endl;
+      return _x(dim); }
+   else {   // cout << _xold(dim) << endl;
+      return _xold(dim);
+   }
 }
 
 void Particle :: setposition(int dim, double position){
@@ -78,6 +81,7 @@ void Particle :: setvelocity(int dim, double velocity){
 }
 
 double Particle :: pbc(double position, double side){
+   // cout << position - side * rint(position / side) << endl;
   return position - side * rint(position / side);
 }
 

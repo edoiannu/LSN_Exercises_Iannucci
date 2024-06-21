@@ -3,9 +3,9 @@ RESTART                1
 TEMP                   1.2
 NPART                  108
 RHO                    0.05
-R_CUT                  5.0
-DELTA                  4
-NBLOCKS                100
-NSTEPS                 1000
+R_CUT                  5
+DELTA                  5
+NBLOCKS                500000
+NSTEPS                 1
 
 ENDINPUT
