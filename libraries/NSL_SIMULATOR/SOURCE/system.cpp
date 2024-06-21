@@ -214,7 +214,7 @@ void System :: initialize(string inputf, string outputd){ // Initialize the Syst
 void System :: initialize_velocities(string inputd){
   if(_restart and _sim_type==0){  // Se la variabile _restart è vera (cioè non zero) e il tipo di simulazione _sim_type è uguale a zero, allora la condizione è vera
     ifstream cinf;
-    cinf.open(inputd+"CONFIG/velocities.out");
+    cinf.open(inputd+"CONFIG/term_velocities.out");
     if(cinf.is_open()){
       double vx, vy, vz;
       for(int i=0; i<_npart; i++){
@@ -223,7 +223,7 @@ void System :: initialize_velocities(string inputd){
         _particle(i).setvelocity(1,vy);
         _particle(i).setvelocity(2,vz);
       }
-    } else cerr << "PROBLEM: Unable to open INPUT file velocities.out"<< endl;
+    } else cerr << "PROBLEM: Unable to open INPUT file term_velocities.out"<< endl;
     cinf.close();
   } else {
     vec vx(_npart), vy(_npart), vz(_npart);
@@ -328,7 +328,7 @@ void System :: initialize_properties(string outputd){ // Initialize data members
         _measure_pressure = true;
         _index_pressure = index_property;
         index_property++;
-        _ptail = (16 * M_PI * _rho) * ((2/3)/pow(_r_cut,9) - 1/pow(_r_cut,3));
+        _ptail = (32 * M_PI * _rho) * (1./(3. * pow(_r_cut,9)) - 1./(2. * pow(_r_cut,3)));
       } else if( property == "GOFR" ){
         ofstream coutgr(outputd+"gofr.dat");
         coutgr << "# DISTANCE:     AVE_GOFR:        ERROR:" << endl;
@@ -473,7 +473,7 @@ void System :: read_configuration(string outputd){
       cinf.close();
     }
     else {
-      cinf.open(outputd+"CONFIG/config.xyz");
+      cinf.open(outputd+"CONFIG/term_config.xyz");
     }
 
     if(cinf.is_open()){
@@ -494,7 +494,7 @@ void System :: read_configuration(string outputd){
       _particle(i).setposition(2, this->pbc(_side(2)*z, 2));
       _particle(i).acceptmove(); // _x_old = _x_new
     }
-    } else cerr << "PROBLEM: Unable to open INPUT file config.xyz"<< endl;
+    } else cerr << "PROBLEM: Unable to open INPUT file term_config.xyz"<< endl;
     cinf.close();
   }
   else{
@@ -740,17 +740,12 @@ void System :: averages(int blk, string outputd){
   // GOFR //////////////////////////////////////////////////////////////////////
   // TO BE FIXED IN EXERCISE 7
   if (_measure_gofr){
-    // vec interval = _measurement.subvec(_index_gofr, _index_gofr+_n_bins-1);
-    // interval.t().print();
     coutf.open(outputd+"gofr.dat",ios::app);
     if (blk == _nblocks) {  // stampo la gofr alla fine di tutti i blocchi
       for (int i=_index_gofr; i<_index_gofr+_n_bins; i++){
         coutf << (i-_index_gofr)*_bin_size
               << setw(12) << _global_av(i)/double(blk)
               << setw(12) << this->error(_global_av(i), _global_av2(i), blk) << endl;
-        // coutf << (i-_index_gofr)*_bin_size
-              // << setw(12) << _measurement(i) << endl;
-              // << setw(12) << this->error(_global_av(i), _global_av2(i), blk) << endl;
       }
     }
     coutf.close();
