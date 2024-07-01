@@ -13,8 +13,8 @@ int main (int argc, char *argv[]){
     }
 
     string inputf = inputd+string(argv[1])+".dat";
-    // string outputd = "results/Exercise_07-4/NVE/"+string(argv[1])+"/";
-    string outputd = "results/Exercise_07-2/"+string(argv[1])+"/";
+    string outputd = "results/Exercise_07-4/NVE/"+string(argv[1])+"/";
+    // string outputd = "results/Exercise_07-2/"+string(argv[1])+"/";
 
     int nconf = 1;
     System SYS;
