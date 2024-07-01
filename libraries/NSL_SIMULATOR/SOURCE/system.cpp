@@ -113,16 +113,16 @@ double System :: Boltzmann(int i, bool xnew){
   double energy_i=0.0;
   double dx, dy, dz, dr;
   for (int j=0; j<_npart; j++){
-    cout << "questo stampa la pbc " << i << endl;
+    // cout << "questo stampa la pbc " << i << endl;
     if(j != i){
       dx = this->pbc(_particle(i).getposition(0,xnew) - _particle(j).getposition(0,1), 0);
       dy = this->pbc(_particle(i).getposition(1,xnew) - _particle(j).getposition(1,1), 1);
       dz = this->pbc(_particle(i).getposition(2,xnew) - _particle(j).getposition(2,1), 2);
       dr = dx*dx + dy*dy + dz*dz;
       dr = sqrt(dr);
-      cout << _particle(i).getposition(0,xnew) << endl;
-      cout << _particle(i).getposition(1,xnew) << endl;
-      cout << _particle(i).getposition(2,xnew) << endl;
+      // cout << _particle(i).getposition(0,xnew) << endl;
+      // cout << _particle(i).getposition(1,xnew) << endl;
+      // cout << _particle(i).getposition(2,xnew) << endl;
       if(dr < _r_cut){
         energy_i += 1.0/pow(dr,12) - 1.0/pow(dr,6);
       }
@@ -503,6 +503,7 @@ void System :: read_configuration(string outputd){
       _particle(i).setposition(1, this->pbc(_side(1)*y, 1));
       _particle(i).setposition(2, this->pbc(_side(2)*z, 2));
       _particle(i).acceptmove(); // _x_old = _x_new
+      // cout << x << y << z << endl;
     }
     } else cerr << "PROBLEM: Unable to open INPUT file term_config.xyz"<< endl;
     cinf.close();
@@ -583,6 +584,7 @@ void System :: measure(){ // Measure properties
         distance(0) = this->pbc( _particle(i).getposition(0,true) - _particle(j).getposition(0,true), 0);
         distance(1) = this->pbc( _particle(i).getposition(1,true) - _particle(j).getposition(1,true), 1);
         distance(2) = this->pbc( _particle(i).getposition(2,true) - _particle(j).getposition(2,true), 2);
+        // cout << distance(0) << " " << distance(1) << " " << distance(2) << endl;
         dr = sqrt( dot(distance,distance) );
         // cout << dr << endl;
         // GOFR ... TO BE FIXED IN EXERCISE 7
