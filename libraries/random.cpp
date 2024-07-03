@@ -16,7 +16,7 @@ _/    _/  _/_/_/  _/_/_/_/ email: Davide.Galli@unimi.it
 
 using namespace std;
 
-const string LibrariesDirectory = "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/";
+const string LibrariesDirectory = "/home/edoiannu/Documenti/Lab_simulazione_numerica/LSN_Exercises_Iannucci/libraries/";
 
 Random :: Random(){
 

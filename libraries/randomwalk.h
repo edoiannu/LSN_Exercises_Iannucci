@@ -2,7 +2,7 @@
 #define __RandomWalk__
 
 #include <cmath>
-#include "/home/edoiannu/Documenti/Lab_simulazione_numerica/libraries/random.h"
+#include "random.h"
 
 class RandomWalk {
 

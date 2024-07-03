@@ -810,7 +810,7 @@ void System :: averages(int blk, string outputd){
   // cout << _naccepted << " " << _nattempts << endl;
   coutf << setw(12) << blk << setw(12) << fraction << endl;
   coutf.close();
-  // cout << fraction << endl;
+  cout << fraction << endl;
   
   return;
 }
