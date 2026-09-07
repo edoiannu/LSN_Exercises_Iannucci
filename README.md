@@ -1,3 +1,4 @@
-# LSN_Exercises_Iannucci
+# LSN Exercises
 
-Laboratory of Numerical Simulation exercises delivery
+Numerical Simulation Laboratory exercises
+Academic Year: 2023/2024
